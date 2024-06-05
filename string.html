@@ -1,37 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>字符串小工具</title>
     <link rel="icon" href="./Str.png" sizes="300x300" type="image/png">
     <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
-    <div class="card my-2">
-        <div class="card-header">拼接字符串</div>
-        <div class="row g-0 p-2">
-            <div class="col-md-3">
-                <textarea class="form-control" id="content" rows="10" placeholder="输入多行内容" aria-label="输入多行内容" autofocus></textarea>
-                <div class="my-2">
-                    <div class="form-check-inline">分隔符</div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked>
-                        <label class="form-check-label" for="inlineRadio1">单引号</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                        <label class="form-check-label" for="inlineRadio2">双引号</label>
-                    </div>
-                    <input class="form-control" type="text" id="separator" value="'" aria-label="readonly input example">
-                </div>
-                <button type="button" class="btn btn-primary w-100" id="submit">Submit</button>
+    <div class="row g-2">
+        <p class="fs-3">拼接字符串</p>
+        <div class="col">
+            <div class="mb-3">
+                <label for="content" class="form-label">内容<span class="text-primary" id="contentTip"></span></label>
+                <textarea class="form-control" id="content" rows="10" placeholder="内容" aria-label="内容"></textarea>
             </div>
-            <div class="col-md-9">
-                <div class="card-body">
-                    <div class="card-text" id="help">Lorem ipsum dolor sit amet.</div>
-                    <div class="card-text user-select-all" id="result" style="max-height: 19rem;overflow-y: scroll;"></div>
+            <div class="mb-3">
+                <div class="form-check-inline">分隔符</div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="'" checked>
+                    <label class="form-check-label" for="inlineRadio1">单引号</label>
                 </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value='"'>
+                    <label class="form-check-label" for="inlineRadio2">双引号</label>
+                </div>
+                <input class="form-control" type="text" id="separator" value="'" aria-label="input example">
+            </div>
+            <button type="button" class="btn btn-primary w-100" id="submit">Submit</button>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <label for="duplication" class="form-label">重复项<span class="text-primary" id="duplicationTip"></span></label>
+                <textarea class="form-control" id="duplication" rows="10" placeholder="重复项" aria-label="重复项" readonly></textarea>
+            </div>
+        </div>
+        <div class="col">
+            <div class="mb-3">
+                <div class="card-text" id="help">Lorem ipsum dolor sit amet.</div>
+                <div class="card-text user-select-all" id="result" style="max-height: 19rem;overflow-y: scroll;"></div>
             </div>
         </div>
     </div>
@@ -40,21 +48,36 @@
     const inlineRadioOptions = document.querySelectorAll("input[name=inlineRadioOptions]");
     inlineRadioOptions.forEach(radio => {
         radio.addEventListener('change', function (evt) {
-            document.querySelector('#separator').value = evt.target.value == 'option1' ? "'" : '"';
+            document.querySelector('#separator').value = evt.target.value;
         });
     });
     document.querySelector('#submit').addEventListener('click', function () {
         const content = document.querySelector('#content').value;
         if (content.trim()) {
-            const mySet = new Set();
+            const contentSet = new Set();
+            const duplicationSet = new Set();
             content.split('\n').forEach((x) => {
                 if (x.trim()) {
-                    mySet.add(x.trim())
+                    if (contentSet.has(x.trim())) {
+                        duplicationSet.add(x.trim());
+                    }
+                    contentSet.add(x.trim());
                 }
             });
-            document.querySelector('#help').innerHTML = '有效数据：' + mySet.size;
+            document.querySelector('#help').innerHTML = `有效数据：${contentSet.size}`;
+            document.querySelector('#contentTip').innerText = '（已去重）';
+            document.querySelector('#duplicationTip').innerText = `：${duplicationSet.size}`;
+            document.querySelector('#content').value = Array.from(contentSet).join("\n");
+            document.querySelector('#duplication').value = Array.from(duplicationSet).join("\n");
+
             let separator = document.querySelector('#separator').value;
-            document.querySelector('#result').innerHTML = separator + Array.from(mySet).join(`${separator},${separator}`) + separator;
+            let result = '';
+            if (['"', "'"].includes(separator)) {
+                result = separator + Array.from(contentSet).join(`${separator},${separator}`) + separator;
+            } else {
+                result = Array.from(contentSet).join(`${separator}`);
+            }
+            document.querySelector('#result').innerText = result;
         }
     });
 
