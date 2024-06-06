@@ -3,43 +3,74 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="文本拼接、文本比较、文本并集、文本差集">
     <title>字符串小工具</title>
     <link rel="icon" href="./Str.png" sizes="300x300" type="image/png">
     <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div class="container">
-    <div class="row g-2">
-        <p class="fs-3">拼接字符串</p>
-        <div class="col">
-            <div class="mb-3">
-                <label for="content" class="form-label">内容<span class="text-primary" id="contentTip"></span></label>
-                <textarea class="form-control" id="content" rows="10" placeholder="内容" aria-label="内容"></textarea>
-            </div>
-            <div class="mb-3">
-                <div class="form-check-inline">分隔符</div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="'" checked>
-                    <label class="form-check-label" for="inlineRadio1">单引号</label>
+<div class="container pt-2">
+    <div class="card mb-2">
+        <div class="card-header">文本拼接</div>
+        <div class="card-body">
+            <div class="row g-2">
+                <div class="col-md-5">
+                    <div class="mb-3">
+                        <label for="concatenateText" class="form-label">请输入文本</label>
+                        <textarea class="form-control" id="concatenateText" rows="8" placeholder="请输入文本" aria-label="请输入文本"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="duplicationText" class="form-label">重复文本</label>
+                        <textarea class="form-control" id="duplicationText" rows="8" placeholder="重复文本" aria-label="重复文本" readonly></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check-inline">分隔符</div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="'" checked>
+                            <label class="form-check-label" for="inlineRadio1">单引号</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value='"'>
+                            <label class="form-check-label" for="inlineRadio2">双引号</label>
+                        </div>
+                        <input class="form-control" type="text" id="separator" value="'" aria-label="input example">
+                    </div>
+                    <button type="button" class="btn btn-primary w-100" id="concatenate">拼接</button>
                 </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value='"'>
-                    <label class="form-check-label" for="inlineRadio2">双引号</label>
+                <div class="col-md-7">
+                    <div class="card-title" id="helpBlock">Card title</div>
+                    <div class="card-text user-select-all overflow-auto" id="output" style="max-height: 594px;">Lorem ipsum dolor sit amet.</div>
                 </div>
-                <input class="form-control" type="text" id="separator" value="'" aria-label="input example">
-            </div>
-            <button type="button" class="btn btn-primary w-100" id="submit">Submit</button>
-        </div>
-        <div class="col">
-            <div class="mb-3">
-                <label for="duplication" class="form-label">重复项<span class="text-primary" id="duplicationTip"></span></label>
-                <textarea class="form-control" id="duplication" rows="10" placeholder="重复项" aria-label="重复项" readonly></textarea>
             </div>
         </div>
-        <div class="col">
-            <div class="mb-3">
-                <div class="card-text" id="help">Lorem ipsum dolor sit amet.</div>
-                <div class="card-text user-select-all" id="result" style="max-height: 19rem;overflow-y: scroll;"></div>
+    </div>
+    <div class="card mb-2">
+        <div class="card-header">文本比较、文本并集、文本差集</div>
+        <div class="card-body">
+            <div class="row g-2">
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="textSet1" class="form-label">请输入文本1</label>
+                        <textarea class="form-control" id="textSet1" rows="8" placeholder="请输入文本1" aria-label="请输入文本1"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="textSet2" class="form-label">请输入文本2</label>
+                        <textarea class="form-control" id="textSet2" rows="8" placeholder="请输入文本2" aria-label="请输入文本2"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label for="textSetOutput" class="form-label">输出</label>
+                        <textarea class="form-control" id="textSetOutput" rows="8" placeholder="输出" aria-label="输出" readonly></textarea>
+                    </div>
+                </div>
+                <div class="d-grid gap-2 d-md-block">
+                    <button class="btn btn-primary" type="button" id="difference1">文本差集(在文本1不在文本2内)</button>
+                    <button class="btn btn-primary" type="button" id="difference2">文本差集(在文本2不在文本1内)</button>
+                    <button class="btn btn-success" type="button" id="intersection">文本交集</button>
+                </div>
             </div>
         </div>
     </div>
@@ -51,36 +82,52 @@
             document.querySelector('#separator').value = evt.target.value;
         });
     });
-    document.querySelector('#submit').addEventListener('click', function () {
-        const content = document.querySelector('#content').value;
-        if (content.trim()) {
-            const contentSet = new Set();
+    // 拼接文本
+    document.querySelector('#concatenate').addEventListener('click', function () {
+        const concatenateText = document.querySelector('#concatenateText').value;
+        if (concatenateText.trim()) {
+            const textSet = new Set();
             const duplicationSet = new Set();
-            content.split('\n').forEach((x) => {
+            concatenateText.split('\n').forEach((x) => {
                 if (x.trim()) {
-                    if (contentSet.has(x.trim())) {
+                    if (textSet.has(x.trim())) {
                         duplicationSet.add(x.trim());
                     }
-                    contentSet.add(x.trim());
+                    textSet.add(x.trim());
                 }
             });
-            document.querySelector('#help').innerHTML = `有效数据：${contentSet.size}`;
-            document.querySelector('#contentTip').innerText = '（已去重）';
-            document.querySelector('#duplicationTip').innerText = `：${duplicationSet.size}`;
-            document.querySelector('#content').value = Array.from(contentSet).join("\n");
-            document.querySelector('#duplication').value = Array.from(duplicationSet).join("\n");
+            document.querySelector('#helpBlock').innerHTML = `有效数据：${textSet.size}`;
+            document.querySelector('#concatenateText').value = Array.from(textSet).join("\n");
+            document.querySelector('#duplicationText').value = Array.from(duplicationSet).join("\n");
 
             let separator = document.querySelector('#separator').value;
-            let result = '';
+            let output = '';
             if (['"', "'"].includes(separator)) {
-                result = separator + Array.from(contentSet).join(`${separator},${separator}`) + separator;
+                output = separator + Array.from(textSet).join(`${separator},${separator}`) + separator;
             } else {
-                result = Array.from(contentSet).join(`${separator}`);
+                output = Array.from(textSet).join(`${separator}`);
             }
-            document.querySelector('#result').innerText = result;
+            document.querySelector('#output').innerText = output;
         }
     });
-
+    // 文本比较
+    ['difference1', 'difference2', 'intersection'].forEach(element => {
+        document.querySelector(`#${element}`).addEventListener('click', function () {
+            const textSet1Value = document.querySelector('#textSet1').value;
+            const textSet2Value = document.querySelector('#textSet2').value;
+            const textSet1 = new Set(textSet1Value.split('\n').map(x => x.trim()).filter(x => x.length > 0));
+            const textSet2 = new Set(textSet2Value.split('\n').map(x => x.trim()).filter(x => x.length > 0));
+            let textSetOutput = null;
+            if (element === 'difference1') {
+                textSetOutput = textSet1.difference(textSet2);
+            } else if (element === 'difference2') {
+                textSetOutput = textSet2.difference(textSet1);
+            } else if (element === 'intersection') {
+                textSetOutput = textSet1.intersection(textSet2);
+            }
+            document.querySelector('#textSetOutput').value = Array.from(textSetOutput).join('\n');
+        }, false);
+    });
 </script>
 </body>
 </html>
