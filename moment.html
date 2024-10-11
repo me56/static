@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.net/twitter-bootstrap/5.3.2/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.net/twitter-bootstrap/5.3.2/js/bootstrap.min.js"></script>
+    <style>
+        .wrapper {
+            max-width: 550px;
+            min-width: 320px;
+        }
+
+        .bg {
+            height: 332px;
+            /*background-image: url("./images/bg.jpg");*/
+            background-image: linear-gradient(180deg, rgba(255,255,255, 0.01), rgba(255,190,174, 1) 85%), radial-gradient(ellipse at top left, rgba(13,110,253, 0.5), transparent 50%), radial-gradient(ellipse at top right, rgba(255,228,132, 0.5), transparent 50%), radial-gradient(ellipse at center right, rgba(112.520718,44.062154,249.437846, 0.5), transparent 50%), radial-gradient(ellipse at center left, rgba(214,51,132, 0.5), transparent 50%);
+            background-position: center 58%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            z-index: -10;
+        }
+
+        @media (max-width: 370px) {
+            .bg {
+                background-position-y: bottom;
+                background-size: 116%;
+            }
+        }
+
+        .bg .nicknameAvatar {
+            position: absolute !important;
+            bottom: 0 !important;
+            right: 0 !important;
+            transform: translate(-19%, 27%) !important;
+        }
+
+        .nicknameAvatar .nickname {
+            display: inline-block;
+            color: #ffffff;
+            font-size: 16px;
+            position: relative;
+            right: 10px;
+            vertical-align: top;
+            top: 6px;
+        }
+
+        .avatar {
+            /*background-image: url("./images/avatar.jpg");*/
+            background-image: linear-gradient(180deg, rgba(255,255,255, 0.01), rgba(255,190,174, 1) 85%), radial-gradient(ellipse at top left, rgba(13,110,253, 0.5), transparent 50%), radial-gradient(ellipse at top right, rgba(255,228,132, 0.5), transparent 50%), radial-gradient(ellipse at center right, rgba(112.520718,44.062154,249.437846, 0.5), transparent 50%), radial-gradient(ellipse at center left, rgba(214,51,132, 0.5), transparent 50%);
+            background-position: center;
+            background-size: cover;
+        }
+
+        .rightAvatar {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+        }
+
+        .main {
+            gap: 0.7rem;
+            margin-left: 23px;
+            margin-right: 25px;
+            margin-top: 37px;
+        }
+
+        .main .leftAvatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 2px;
+        }
+
+        .main .aliasContent {
+            max-width: 450px;
+        }
+
+        .aliasContent .nickname {
+            font-size: 15px;
+            color: #576B95;
+            margin-bottom: 3px;
+        }
+
+        .aliasContent .content {
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 8px;
+            font-family: sans-serif;
+        }
+
+        .picture img {
+            width: 32%;
+            height: 50%;
+            object-fit: cover;
+            object-position: center center;
+            vertical-align: middle;
+            /*margin-bottom: 5px;*/
+        }
+
+        .picture img:first-child:nth-last-child(1) {
+            width: 30%;
+            height: auto;
+            vertical-align: middle;
+        }
+
+        /*2或3张图片时,图片排列在同一行*/
+        /* 2/3 */
+        .picture img:nth-child(1):nth-last-child(2),
+        .picture img:nth-child(2):nth-last-child(1),
+        .picture img:nth-child(1):nth-last-child(3),
+        .picture img:nth-child(2):nth-last-child(2),
+        .picture img:nth-child(3):nth-last-child(1) {
+            width: 32%;
+        }
+
+        /*每一行只有两个图片，且两张图片各占一半左右的宽度*/
+        /* 4 */
+        .picture img:nth-child(1):nth-last-child(4),
+        .picture img:nth-child(2):nth-last-child(3),
+        .picture img:nth-child(3):nth-last-child(2),
+        .picture img:nth-child(4):nth-last-child(1) {
+            width: 49%;
+        }
+
+        /*  5张以上图片  */
+        .picture img:nth-child(1):nth-last-child(n + 5),
+        .picture img:nth-child(1):nth-last-child(n + 5) ~ img {
+            width: 32%;
+        }
+
+        .bottom {
+            padding-top: 6px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #F3F3F3;
+        }
+
+        .bottom .time {
+            color: #9E9E9E;
+            font-size: 12px;
+        }
+
+        .bottom .trash {
+            color: #576B95;
+            font-size: 12px;
+            margin-left: 6px;
+        }
+
+        .bottom .morebox {
+            height: 15px;
+            border-radius: 3px;
+            position: fixed;
+            right: 24px;
+            padding: 10px 9px;
+            background-color: #F7F7F7;
+            margin-top: 2px;
+        }
+
+        .morebox .more {
+            font-size: 32px;
+            color: #576B95;
+            display: inline-block;
+            margin-top: -29px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid p-0">
+    <div class="d-flex flex-column wrapper">
+        <div class="bg position-relative">
+            <div class="nicknameAvatar">
+                <div class="nickname">这是昵称</div>
+                <div class="avatar rightAvatar"></div>
+            </div>
+        </div>
+        <div class="d-flex main">
+            <div class="flex-shrink-0 avatar leftAvatar"></div>
+            <div class="d-flex flex-column aliasContent">
+                <div class="flex-shrink-0 nickname">这是昵称</div>
+                <div class="flex-shrink-1 content ">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus,
+                    ipsa.
+                </div>
+                <div class="flex-shrink-0 picture">
+<!--                    <img src="./images/moment1.jpg" alt="">-->
+                </div>
+                <div class="bottom">
+                    <span class="time">刚刚</span>
+                    <span class="trash">删除</span>
+                    <div class="d-inline-block morebox">
+                        <span class="more">··</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">New message</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="bg" class="form-label">背景图片</label>
+                        <input class="form-control" type="file" id="bg" accept=".jpg, .jpeg, .png">
+                    </div>
+                    <div class="mb-3">
+                        <label for="nickname" class="form-label">昵称</label>
+                        <input type="email" class="form-control" id="nickname" placeholder="...">
+                    </div>
+                    <div class="mb-3">
+                        <label for="avatar" class="form-label">头像图片</label>
+                        <input class="form-control" type="file" id="avatar" accept=".jpg, .jpeg, .png">
+                    </div>
+                    <div class="mb-3">
+                        <label for="content" class="form-label">发表文字</label>
+                        <textarea class="form-control" id="content" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="picture" class="form-label">发表图片</label>
+                        <input class="form-control" type="file" id="picture" accept=".jpg, .jpeg, .png" multiple>
+                    </div>
+                    <div class="mb-3">
+                        <label for="time" class="form-label">发表时间</label>
+                        <input class="form-control" type="text" id="time">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="submit">取消/确认</button>
+<!--                <button type="button" class="btn btn-primary" id="submit">Send message</button>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelector('.wrapper').addEventListener('click', function () {
+        const myModal = new bootstrap.Modal('#exampleModal');
+        myModal.show();
+    }, false);
+</script>
+<script>
+    document.querySelector('#submit').addEventListener('click', function () {
+        document.querySelectorAll('.form-control').forEach(function (formControl) {
+            // id="bg"
+            // id="nickname"
+            // id="avatar"
+            // id="content"
+            // id="picture"
+            // id="time"
+            const category = formControl.id;
+            if (category === 'bg') {
+                document.querySelectorAll('.bg')[0].style.backgroundImage = `url(${URL.createObjectURL(formControl.files[0])})`;
+            }
+            if (category === 'nickname') {
+                document.querySelectorAll('.nickname').forEach(function (element) {
+                    element.textContent = formControl.value.trim();
+                });
+            }
+            if (category === 'avatar') {
+                document.querySelectorAll('.avatar').forEach(function (element) {
+                    element.style.backgroundImage = `url(${URL.createObjectURL(formControl.files[0])})`;
+                });
+            }
+            if (category === 'content') {
+                document.querySelectorAll('.content')[0].textContent = formControl.value.trim();
+            }
+            if (category === 'picture') {
+                document.querySelectorAll('.picture').forEach(function (element) {
+                    for (const file of formControl.files) {
+                        const image = document.createElement("img");
+                        image.src = URL.createObjectURL(file);
+                        element.appendChild(image);
+                    }
+                });
+            }
+            if (category === 'time') {
+                let time = formControl.value.trim();
+                document.querySelectorAll('.time')[0].textContent = time ? `${time}分钟前` : '刚刚';
+            }
+
+        });
+    }, false);
+</script>
+</body>
+</html>
